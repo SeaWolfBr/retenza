@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://retenza.com.br/sitemap.xml
