@@ -20,14 +20,6 @@ window.APP_DATA = {
         { value: "fatigue",   label: "Canso rápido ao ler" }
       ]
     },
-    {
-      id: "sessionDuration",
-      question: "Quanto tempo você tem para treinar?",
-      options: [
-        { value: 5,  label: "5 minutos" },
-        { value: 10, label: "10 minutos" }
-      ]
-    }
   ],
 
   texts: [
