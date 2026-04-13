@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retenza — Treino de Leitura para Concursos e Vestibulares</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ── Modal de leitura ── -->
+  <div class="reading-modal" id="reading-modal">
+    <div class="reading-modal-header">
+      <span class="reading-modal-title" id="reading-modal-title"></span>
+      <div class="timer reading-modal-timer" id="reading-modal-timer">00:00</div>
+      <button class="reading-modal-done" id="reading-modal-done">Terminei de ler</button>
+    </div>
+    <div class="reading-modal-body">
+      <div class="reading-modal-text" id="reading-modal-text"></div>
+    </div>
+  </div>
+
+  <main class="page">
+
+    <!-- ── Navbar global ── -->
+    <nav class="navbar">
+      <button class="nav-brand" onclick="showScreen('screen-landing')">
+        <img class="nav-logo" src="assets/logo.png" alt="Logo Retenza">
+        <span class="nav-brand-name">Retenza</span>
+      </button>
+      <div class="nav-links">
+        <button class="nav-link" onclick="showScreen('screen-about')">Sobre</button>
+        <button class="nav-link" onclick="showScreen('screen-metrics')">Métricas</button>
+        <button class="nav-link" onclick="showScreen('screen-blog')">Blog</button>
+        <button class="nav-link" onclick="openContactModal()">Fale Conosco</button>
+        <span class="nav-sep"></span>
+        <button class="nav-link nav-returning" id="nav-continue" style="display:none" onclick="showScreen('screen-training')">Continuar treinando</button>
+        <button class="nav-cta" onclick="startOnboarding()">Começar grátis</button>
+      </div>
+    </nav>
+
+    <!-- ── Landing ── -->
+    <section class="screen active" id="screen-landing">
+      <div class="hero">
+        <div class="hero-main">
+          <div class="hero-copy">
+            <span class="eyebrow">Para concurseiros e vestibulandos</span>
+            <h2 class="hero-title">Treine leitura.<br>Retenha mais do que estuda.</h2>
+            <p>Diagnóstico de velocidade, textos de prova real e treino com quiz. Sem enrolação.</p>
+            <div class="hero-actions">
+              <button class="hero-cta" onclick="startOnboarding()">Começar diagnóstico</button>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <div class="hero-image-card">
+              <img class="hero-image" src="assets/pessoalendo1.jpg" alt="Pessoa estudando">
+            </div>
+          </div>
+        </div>
+        <div class="hero-stats-strip">
+          <div class="hero-stat-item">
+            <strong>238 PPM</strong>
+            <span>média do adulto brasileiro</span>
+          </div>
+          <div class="hero-stat-item">
+            <strong>+50%</strong>
+            <span>mais retenção com quiz ativo</span>
+          </div>
+          <div class="hero-stat-item">
+            <strong>5 min</strong>
+            <span>por sessão de treino</span>
+          </div>
+          <div class="hero-stat-item">
+            <strong>100%</strong>
+            <span>gratuito, sem cadastro</span>
+          </div>
+        </div>
+        <div class="hero-grid">
+          <div class="hero-card hero-card--link" onclick="showScreen('screen-training'); activateTab('rsvp')">
+            <h2>Leitura de Arranque</h2>
+            <p>Palavra por palavra, no centro da tela. Treine ritmo e foco visual com textos de prova.</p>
+            <span class="hero-card-cta">Treinar agora &#8594;</span>
+          </div>
+          <div class="hero-card hero-card--link" onclick="showScreen('screen-training'); activateTab('chunk')">
+            <h2>Leitura em Blocos</h2>
+            <p>O texto aparece em grupos de palavras. Treina a leitura por blocos de significado.</p>
+            <span class="hero-card-cta">Treinar agora &#8594;</span>
+          </div>
+          <div class="hero-card hero-card--link" onclick="showScreen('screen-training'); activateTab('speed')">
+            <h2>Retenção Ativa</h2>
+            <p>Leia o texto completo. Quiz no final. Mede compreensão real, não só velocidade.</p>
+            <span class="hero-card-cta">Treinar agora &#8594;</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Onboarding ── -->
+    <section class="screen" id="screen-onboarding">
+      <div class="onboarding-wrap">
+        <div class="onboarding-header">
+          <button class="back-link" onclick="showScreen('screen-landing')">&#8592; Voltar</button>
+          <div class="step-dots" id="onboarding-dots"></div>
+        </div>
+        <div class="onboarding-card">
+          <p class="step-label" id="onboarding-step-label">Passo 1 de 3</p>
+          <h2 class="onboarding-question" id="onboarding-question"></h2>
+          <div class="option-grid" id="onboarding-options"></div>
+          <button class="btn-primary" id="onboarding-next" disabled>Continuar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Diagnóstico ── -->
+    <section class="screen" id="screen-diagnostic">
+      <div class="diagnostic-wrap">
+
+        <!-- Fase 1: Leitura -->
+        <div class="diag-phase active" id="diag-phase-read">
+          <div class="diag-header">
+            <button class="back-link" onclick="showScreen('screen-onboarding')">&#8592; Voltar</button>
+            <span class="step-label">Diagnóstico — Leitura</span>
+          </div>
+          <div class="diag-card">
+            <p class="diag-intro">Clique em <strong>Iniciar leitura</strong> para abrir o texto em tela cheia. Leia no seu ritmo e clique em <strong>Terminei de ler</strong> ao finalizar.</p>
+            <div class="diag-meta" id="diag-text-meta"></div>
+            <div class="diag-timer-row">
+              <div class="timer" id="diag-timer">00:00</div>
+              <div class="controls">
+                <button class="action primary" id="diag-start">Iniciar leitura</button>
+                <button class="action secondary" id="diag-stop" disabled>Terminei de ler</button>
+              </div>
+            </div>
+            <div class="diag-text-box" id="diag-text-body" style="display:none"></div>
+          </div>
+        </div>
+
+        <!-- Fase 2: Quiz -->
+        <div class="diag-phase" id="diag-phase-quiz">
+          <div class="diag-header">
+            <span class="step-label">Diagnóstico — Compreensão</span>
+          </div>
+          <div class="diag-card">
+            <h2>Questões de compreensão</h2>
+            <p>Responda com base no texto que você acabou de ler.</p>
+            <div id="diag-quiz-container"></div>
+            <button class="btn-primary" id="diag-quiz-submit" disabled>Ver meu resultado</button>
+          </div>
+        </div>
+
+        <!-- Fase 3: Resultado -->
+        <div class="diag-phase" id="diag-phase-result">
+          <div class="diag-header">
+            <span class="step-label">Diagnóstico — Resultado</span>
+          </div>
+          <div class="diag-card">
+            <h2 id="diag-result-title">Seu diagnóstico está pronto</h2>
+            <div class="diag-stats-grid" id="diag-stats-grid"></div>
+            <p class="diag-suggestion" id="diag-suggestion"></p>
+            <button class="btn-primary" onclick="showScreen('screen-training')">Começar treino</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── Treino ── -->
+    <section class="screen" id="screen-training">
+      <div id="tabs-anchor"></div>
+      <nav class="tabs" aria-label="Modos de treino">
+        <button class="tab-button active" data-tab="rsvp">Leitura de Arranque</button>
+        <button class="tab-button" data-tab="chunk">Leitura em Blocos</button>
+        <button class="tab-button" data-tab="speed">Retenção Ativa</button>
+      </nav>
+
+      <section class="panel active" id="rsvp-panel">
+        <div class="panel-header">
+          <h2>Leitura de Arranque</h2>
+          <p>O texto aparece palavra por palavra no centro da tela. Bom para treinar ritmo e foco visual.</p>
+        </div>
+        <div class="layout">
+          <div class="card">
+            <h3>Configurar texto</h3>
+            <div class="field">
+              <label for="arranque-select">Texto para treinar</label>
+              <select id="arranque-select" class="text-select"></select>
+              <div class="hint" id="arranque-word-count"></div>
+            </div>
+            <div class="field custom-field" id="arranque-custom-field" style="display:none">
+              <label for="arranque-custom-input">Cole seu texto</label>
+              <textarea id="arranque-custom-input" class="custom-input" placeholder="Cole ou digite seu texto aqui..."></textarea>
+              <div class="hint text-warning" id="arranque-custom-warning" style="display:none"></div>
+            </div>
+            <textarea id="rsvp-text" class="sr-only" aria-hidden="true"></textarea>
+            <div class="field">
+              <label for="rsvp-speed">Velocidade: <span id="rsvp-speed-value">300</span> palavras por minuto</label>
+              <input id="rsvp-speed" type="range" min="100" max="800" step="10" value="300">
+              <div class="hint">Quanto maior o número, mais rápido as palavras aparecem.</div>
+            </div>
+            <div class="controls">
+              <button class="action primary" id="rsvp-start">Iniciar</button>
+              <button class="action secondary" id="rsvp-pause">Pausar</button>
+              <button class="action danger" id="rsvp-reset">Reiniciar</button>
+            </div>
+            <div class="stats">
+              <div class="stat"><span class="stat-label">Palavras</span><strong id="rsvp-total">0</strong></div>
+              <div class="stat"><span class="stat-label">Posição</span><strong id="rsvp-index">0</strong></div>
+              <div class="stat"><span class="stat-label">Status</span><strong id="rsvp-status">Parado</strong></div>
+            </div>
+          </div>
+          <div class="card display">
+            <div class="rsvp-word" id="rsvp-display">Selecione um texto e clique em Iniciar</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="chunk-panel">
+        <div class="panel-header">
+          <h2>Leitura em Blocos</h2>
+          <p>O texto aparece em grupos de palavras. Treina a leitura por blocos de significado, ampliando o campo visual.</p>
+        </div>
+        <div class="layout">
+          <div class="card">
+            <h3>Configurar texto</h3>
+            <div class="field">
+              <label for="chunk-select">Texto para treinar</label>
+              <select id="chunk-select" class="text-select"></select>
+              <div class="hint" id="chunk-word-count"></div>
+            </div>
+            <div class="field custom-field" id="chunk-custom-field" style="display:none">
+              <label for="chunk-custom-input">Cole seu texto</label>
+              <textarea id="chunk-custom-input" class="custom-input" placeholder="Cole ou digite seu texto aqui..."></textarea>
+              <div class="hint text-warning" id="chunk-custom-warning" style="display:none"></div>
+            </div>
+            <textarea id="chunk-text" class="sr-only" aria-hidden="true"></textarea>
+            <div class="field">
+              <label for="chunk-size">Palavras por bloco: <span id="chunk-size-value">3</span></label>
+              <input id="chunk-size" type="range" min="2" max="6" step="1" value="3">
+              <div class="hint">2 = pares de palavras &middot; 6 = frases curtas</div>
+            </div>
+            <div class="field">
+              <label for="chunk-speed">Velocidade: <span id="chunk-speed-value">250</span> PPM</label>
+              <input id="chunk-speed" type="range" min="80" max="700" step="10" value="250">
+              <div class="hint">Velocidade em palavras por minuto.</div>
+            </div>
+            <div class="controls">
+              <button class="action primary" id="chunk-start">Iniciar</button>
+              <button class="action secondary" id="chunk-pause">Pausar</button>
+              <button class="action danger" id="chunk-reset">Reiniciar</button>
+            </div>
+            <div class="stats">
+              <div class="stat"><span class="stat-label">Blocos</span><strong id="chunk-total">0</strong></div>
+              <div class="stat"><span class="stat-label">Posição</span><strong id="chunk-index">0</strong></div>
+              <div class="stat"><span class="stat-label">Status</span><strong id="chunk-status">Parado</strong></div>
+            </div>
+          </div>
+          <div class="card display">
+            <div class="chunk-phrase" id="chunk-display">Selecione um texto e clique em Iniciar</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="speed-panel">
+        <div class="panel-header">
+          <h2>Retenção Ativa</h2>
+          <p>Selecione o texto, clique em <strong>Iniciar</strong> para abrir em tela cheia e clique em <strong>Parar</strong> ao terminar.</p>
+        </div>
+        <div class="layout">
+          <div class="card">
+            <h3>Configurar texto</h3>
+            <div class="field">
+              <label for="retencao-select">Texto para treinar</label>
+              <select id="retencao-select" class="text-select"></select>
+              <div class="hint" id="retencao-word-count"></div>
+            </div>
+            <div class="field custom-field" id="retencao-custom-field" style="display:none">
+              <label for="retencao-custom-input">Cole seu texto</label>
+              <textarea id="retencao-custom-input" class="custom-input" placeholder="Cole ou digite seu texto aqui..."></textarea>
+              <div class="hint text-warning" id="retencao-custom-warning" style="display:none"></div>
+            </div>
+            <textarea id="speed-text" class="sr-only" aria-hidden="true"></textarea>
+            <div class="field">
+              <label>Cronômetro</label>
+              <div class="timer" id="speed-timer">00:00</div>
+            </div>
+            <div class="controls">
+              <button class="action primary" id="speed-start">Iniciar</button>
+              <button class="action secondary" id="speed-stop">Parar</button>
+              <button class="action danger" id="speed-reset">Reiniciar</button>
+            </div>
+            <div class="stats">
+              <div class="stat"><span class="stat-label">Palavras</span><strong id="speed-word-count">0</strong></div>
+              <div class="stat"><span class="stat-label">Tempo</span><strong id="speed-total-time">00:00</strong></div>
+              <div class="stat"><span class="stat-label">PPM</span><strong id="speed-wpm">0</strong></div>
+            </div>
+            <div class="result" id="speed-result" style="display:none"></div>
+          </div>
+          <div class="card display" style="display:none">
+            <div class="speed-reader">
+              <div class="speed-text" id="speed-display"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quiz de treino (aparece após conclusão de leitura) -->
+      <div class="training-quiz" id="training-quiz">
+        <div class="diag-header">
+          <button class="back-link" id="tquiz-back">&#8592; Cancelar</button>
+          <span class="step-label">Quiz de compreensão</span>
+        </div>
+        <div class="diag-card">
+          <h2 id="tquiz-title"></h2>
+          <p>Responda com base no texto que você acabou de ler.</p>
+          <div id="tquiz-container"></div>
+          <button class="btn-primary" id="tquiz-submit" disabled>Ver resultado</button>
+        </div>
+      </div>
+
+      <p class="footer-note">Retenza &mdash; Treino de leitura para concurseiros e vestibulandos.</p>
+    </section>
+
+    <!-- ── Resultados ── -->
+    <section class="screen" id="screen-results">
+      <div class="results-wrap">
+        <div class="results-header">
+          <span class="step-label">Resultado da sessão</span>
+        </div>
+        <div class="results-card">
+          <div class="results-mode-badge" id="res-mode-badge"></div>
+          <h2 id="res-title"></h2>
+          <div class="results-grid" id="res-stats-grid"></div>
+          <p class="diag-suggestion" id="res-suggestion"></p>
+          <div class="results-actions">
+            <button class="btn-primary" onclick="showScreen('screen-training')">Treinar novamente</button>
+            <button class="btn-secondary" onclick="showProgressScreen()">Ver meu progresso</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Blog ── -->
+    <section class="screen" id="screen-blog">
+      <div class="content-wrap">
+
+        <!-- Lista de artigos -->
+        <div class="blog-phase active" id="blog-list">
+          <div class="content-header">
+            <span class="step-label">Blog</span>
+            <h2 class="content-title">Técnicas de leitura para quem estuda de verdade</h2>
+            <p class="content-subtitle">Artigos sobre velocidade, retenção e como treinar leitura para concursos e vestibulares.</p>
+          </div>
+          <div class="blog-grid" id="blog-grid"></div>
+        </div>
+
+        <!-- Artigo aberto -->
+        <div class="blog-phase" id="blog-article">
+          <div class="article-header">
+            <button class="back-link" onclick="showBlogList()">&#8592; Voltar para o blog</button>
+          </div>
+          <div class="article-card">
+            <div class="article-meta">
+              <span class="article-tag" id="article-tag"></span>
+              <span class="article-time" id="article-time"></span>
+            </div>
+            <h1 class="article-title" id="article-title"></h1>
+            <div class="article-body" id="article-body"></div>
+            <div class="article-cta">
+              <p>Quer colocar em prática o que leu?</p>
+              <button class="btn-primary" onclick="startOnboarding()">Começar treino grátis</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── Métricas ── -->
+    <section class="screen" id="screen-metrics">
+      <div class="content-wrap">
+        <div class="content-header">
+          <span class="step-label">Métricas de leitura</span>
+          <h2 class="content-title">O que a ciência diz sobre velocidade e compreensão</h2>
+          <p class="content-subtitle">Benchmarks baseados em pesquisas acadêmicas para você entender onde está e para onde quer chegar.</p>
+        </div>
+
+        <!-- Tabela principal -->
+        <div class="metrics-card">
+          <h3>Níveis de velocidade de leitura (PPM)</h3>
+          <p class="metrics-intro">Referência baseada em Rayner et al. (2016) e Brysbaert et al. (2019), adaptada para leitura silenciosa de textos acadêmicos e de prova em língua portuguesa.</p>
+          <div class="metrics-table-wrap">
+            <table class="metrics-table">
+              <thead>
+                <tr>
+                  <th>Nível</th>
+                  <th>Velocidade</th>
+                  <th>Compreensão típica</th>
+                  <th>Perfil</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="metrics-badge metrics-badge--slow">Lenta</span></td>
+                  <td><strong>&lt; 150 PPM</strong></td>
+                  <td>Alta (&gt; 90%)</td>
+                  <td>Leitura laboriosa; comum em iniciantes ou textos muito técnicos</td>
+                </tr>
+                <tr>
+                  <td><span class="metrics-badge metrics-badge--basic">Básica</span></td>
+                  <td><strong>150 – 200 PPM</strong></td>
+                  <td>Alta (85–90%)</td>
+                  <td>Adulto com pouco hábito de leitura; abaixo da média global</td>
+                </tr>
+                <tr>
+                  <td><span class="metrics-badge metrics-badge--avg">Média</span></td>
+                  <td><strong>200 – 300 PPM</strong></td>
+                  <td>Boa (75–85%)</td>
+                  <td>Adulto alfabetizado com hábito regular; média mundial ~238 PPM</td>
+                </tr>
+                <tr>
+                  <td><span class="metrics-badge metrics-badge--fast">Rápida</span></td>
+                  <td><strong>300 – 500 PPM</strong></td>
+                  <td>Moderada (65–75%)</td>
+                  <td>Leitor treinado; profissional que lê muito; zona de alto desempenho</td>
+                </tr>
+                <tr>
+                  <td><span class="metrics-badge metrics-badge--exceptional">Excepcional</span></td>
+                  <td><strong>&gt; 500 PPM</strong></td>
+                  <td>Variável (&lt; 65%)</td>
+                  <td>Raro; ganhos acima de 400 PPM tendem a sacrificar retenção</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Alerta de compreensão -->
+        <div class="metrics-insight">
+          <h4>&#9888;&#65039; Velocidade sem compreensão não vale para concurso</h4>
+          <p>Rayner et al. (2016) demonstraram que a leitura com compreensão real máxima alcança 300–400 PPM mesmo nos adultos mais treinados. Acima disso, o cérebro começa a pular informações — útil para skimming, perigoso em prova.</p>
+          <p><strong>O objetivo ideal para concurseiros e vestibulandos:</strong> entre 250 e 400 PPM com compreensão acima de 70%. Velocidade e retenção juntas.</p>
+        </div>
+
+        <!-- Contexto brasileiro -->
+        <div class="metrics-insight metrics-insight--brand">
+          <h4>&#127464;&#127479; Contexto brasileiro</h4>
+          <p>Estudos brasileiros (PUC-Campinas, SciELO) mostram que estudantes do ensino fundamental leem entre 133 e 165 PPM em leitura oral. Adultos funcionalmente alfabetizados ficam em torno de 200–250 PPM. Não há benchmark nacional oficial consolidado — os dados do INAF medem alfabetismo funcional, não velocidade de leitura especificamente.</p>
+          <p>Isso significa que leitores na faixa de 280–350 PPM com boa compreensão já estão entre os mais preparados do país para provas extensas como ENEM, concursos federais e OAB.</p>
+        </div>
+
+        <!-- Fontes -->
+        <div class="metrics-sources">
+          <h4>Fontes e referências</h4>
+          <ul>
+            <li>Rayner, K. et al. (2016). <em>So Much to Read, So Little Time: How Do We Read, and Can Speed Reading Help?</em> Psychological Science in the Public Interest, 17(1), 4–34.</li>
+            <li>Brysbaert, M. (2019). <em>How many words do we read per minute? A review and meta-analysis of reading rate.</em> Journal of Memory and Language, 109.</li>
+            <li>Cunha, V. L. O. et al. (2010). <em>Velocidade de leitura e desempenho escolar na última série do ensino fundamental.</em> Estudos de Psicologia (Campinas).</li>
+            <li>INAF Brasil 2018. <em>Indicador de Alfabetismo Funcional.</em> Instituto Paulo Montenegro / Ação Educativa.</li>
+          </ul>
+        </div>
+
+        <div class="about-actions">
+          <button class="btn-primary" onclick="startOnboarding()">Medir minha velocidade agora</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── Sobre ── -->
+    <section class="screen" id="screen-about">
+      <div class="content-wrap">
+        <div class="content-header">
+          <span class="step-label">Sobre o Retenza</span>
+          <h2 class="content-title">Uma ferramenta feita para quem estuda com seriedade</h2>
+        </div>
+        <div class="about-grid">
+          <div class="about-card">
+            <h3>O que é o Retenza</h3>
+            <p>O Retenza é uma plataforma de treino de leitura voltada para concurseiros e vestibulandos brasileiros. Nossa proposta não é prometer leitura milagrosa — é oferecer treino real, com textos de prova, medição de velocidade e quiz de compreensão integrado.</p>
+            <p>Acreditamos que ler melhor é uma habilidade treinável. Com método e consistência, qualquer estudante pode ganhar ritmo, foco e retenção.</p>
+          </div>
+          <div class="about-card">
+            <h3>Como funciona</h3>
+            <p>O fluxo é simples: você faz um diagnóstico inicial para medir sua velocidade e compreensão, depois treina com três modos especializados — Leitura de Arranque (RSVP), Leitura em Blocos (chunking) e Retenção Ativa (leitura com quiz).</p>
+            <p>Seu progresso fica salvo localmente no navegador. Sem cadastro, sem rastreamento, sem distração.</p>
+          </div>
+          <div class="about-card">
+            <h3>Privacidade e simplicidade</h3>
+            <p>O Retenza funciona 100% no navegador. Nenhum dado é enviado para servidores. Seu histórico de treino fica no seu dispositivo, sob seu controle.</p>
+            <p>Essa escolha é intencional: queremos que você se concentre no treino, não em criar contas ou aceitar termos de uso.</p>
+          </div>
+          <div class="about-card">
+            <h3>Fale com a gente</h3>
+            <p>Tem sugestões, encontrou algum problema ou quer conversar sobre o produto? Manda uma mensagem.</p>
+            <a class="btn-primary about-cta" href="mailto:contato@retenza.com.br">contato@retenza.com.br</a>
+          </div>
+        </div>
+        <div class="about-actions">
+          <button class="btn-primary" onclick="startOnboarding()">Começar treino grátis</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Progresso ── -->
+    <section class="screen" id="screen-progress">
+      <div class="progress-wrap">
+        <div class="prog-header">
+          <button class="back-link" onclick="showScreen('screen-training')">&#8592; Voltar ao treino</button>
+          <span class="step-label">Meu progresso</span>
+        </div>
+        <div class="prog-stats-grid" id="prog-stats-grid"></div>
+        <div class="prog-history-card">
+          <h3>Últimas sessões</h3>
+          <div id="prog-history"></div>
+        </div>
+        <div class="prog-actions">
+          <button class="btn-primary" onclick="showScreen('screen-training')">Continuar treinando</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      Desenvolvido por <strong>SeaWolfBr</strong>
+    </footer>
+
+  </main>
+
+  <!-- ── Modal de contato ── -->
+  <div class="contact-overlay" id="contact-overlay" onclick="closeContactModal(event)">
+    <div class="contact-modal">
+      <button class="contact-close" onclick="closeContactModal()">&times;</button>
+      <h3>Fale Conosco</h3>
+      <p>Tem sugestões, encontrou algum problema ou quer conversar sobre o produto?</p>
+      <a class="contact-email" href="mailto:contato@retenza.com.br">contato@retenza.com.br</a>
+    </div>
+  </div>
+
+  <script src="data.js?v=10"></script>
+  <script src="app.js?v=10"></script>
+</body>
+</html>
